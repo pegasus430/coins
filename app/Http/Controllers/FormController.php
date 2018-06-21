@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Form;
 
 class FormController extends Controller
 {
@@ -34,7 +35,20 @@ class FormController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+          'coinname' => 'required',
+          'coinprice'=> 'required|numeric',
+        ]); 
+        
+        $form= new Form();
+        $form->coinname=$request->get('coinname');
+        $form->coinprice=$request->get('coinprice');
+        $checkbox = implode(",", $request->get('option'));
+        $form->dropdown=$request->get('dropdown');
+        $form->radio=$request->get('radio');
+        $form->checkbox = $checkbox; 
+        $form->save();
+        return redirect('forms')->with('success', 'Coin has been added');
     }
 
     /**
